@@ -1,0 +1,44 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.5.RELEASE'
+    id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.mz.global'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    compile.exclude module: "spring-boot-starter-tomcat"
+    compile.exclude group: 'com.vaadin.external.google', module: "android-json"
+
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.1'
+    compile("org.springframework.boot:spring-boot-starter-undertow")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile 'org.springframework.boot:spring-boot-starter-aop'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation('org.springframework.boot:spring-boot-starter-log4j2')
+
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.projectlombok:lombok'
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
+    // https://mvnrepository.com/artifact/com.google.crypto.tink/tink
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4')
+
+    compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.2'
+    compile group: 'com.baomidou', name: 'dynamic-datasource-spring-boot-starter', version: '2.5.5'
+}

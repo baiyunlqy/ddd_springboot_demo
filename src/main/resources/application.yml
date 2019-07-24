@@ -1,0 +1,75 @@
+server:
+  port: 8080
+  http2:
+    enabled: true
+  undertow:
+    # IO线程数, 它主要执行非阻塞的任务，它们会负责多个连接，默认设置每个CPU核心一个线程，不可设置过大，否则启动项目会报错：打开文件数过多
+    io-threads: 16
+    # 阻塞任务线程池，当执行类似servlet请求阻塞IO操作，undertow会从这个线程池中取得线程。它的值取决于系统线程执行任务的阻塞系数，默认值是 io-threads*8
+    worker-threads: 256
+    # 每块buffer的空间大小，越小的空间被利用越充分，不要设置太大，以免影响其他应用，合适即可
+    buffer-size: 1024
+    # 是否分配的直接内存(NIO直接分配的堆外内存)
+    direct-buffers: true
+
+spring:
+  profiles:
+    active: dev
+  #    active: prod
+  application:
+    name: customer-service
+  datasource:
+    dynamic:
+      hikari:  # 全局hikariCP参数，所有值和默认保持一致。(现已支持的参数如下,不清楚含义不要乱设置)
+        connection-test-query: SELECT 1
+        connection-timeout: 30000
+        idle-timeout: 180000
+        max-lifetime: 1800000
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      datasource:
+        master:
+          url: jdbc:mysql://localhost:3306/customer?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+          username: root
+          password: 123456
+          type: com.zaxxer.hikari.HikariDataSource
+          driverClassName: com.mysql.cj.jdbc.Driver
+          hikari: # 以下参数针对每个库可以重新设置hikari参数
+            connection-test-query: SELECT 1
+            connection-timeout: 30000
+        slave0:
+          url: jdbc:mysql://localhost:3306/customer?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+          username: root
+          password: 123456
+          type: com.zaxxer.hikari.HikariDataSource
+          driverClassName: com.mysql.cj.jdbc.Driver
+          hikari: # 以下参数针对每个库可以重新设置hikari参数
+            connection-test-query: SELECT 1
+            connection-timeout: 30000
+        slave1:
+          url: jdbc:mysql://localhost:3306/customer?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+          username: root
+          password: 123456
+          type: com.zaxxer.hikari.HikariDataSource
+          driverClassName: com.mysql.cj.jdbc.Driver
+          hikari: # 以下参数针对每个库可以重新设置hikari参数
+            connection-test-query: SELECT 1
+            connection-timeout: 30000
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+      id-type: auto
+      table-underline: true
+      insert-strategy: not_empty
+      update-strategy: not_empty
+      select-strategy: not_empty
+      capital-mode: false

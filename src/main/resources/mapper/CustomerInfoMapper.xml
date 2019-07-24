@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指明当前xml对应的Mapper -->
+<mapper namespace="com.lqy.customer.infrastructure.persistence.mysql.mapper.customer.CustomerInfoMapper">
+    <select id="select"
+            resultType="com.lqy.customer.domain.aggregator.QueryCustomerInfoEntity">
+        SELECT
+        u.`name`,
+        u.tel,
+        v.`level`,
+        v.level_name,
+        c.`total_consume`,
+        c.balance,
+        u.create_time,
+        u.`status`
+        FROM
+        customer_info_base u,
+        vip_customer_relation v,
+        customer_charge_relation c
+        WHERE
+        u.user_code = v.user_code
+        AND u.user_code = c.user_code
+        <if test="startTime!=null and endTime!=null">
+            AND u.create_time
+            BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="level!=null and level!=''">
+            AND `level` = #{level}
+        </if>
+        <if test="name!=null and name!=''">
+            AND `name` LIKE CONCAT('%',#{name},'%')
+        </if>
+        ORDER BY u.create_time
+    </select>
+</mapper>
