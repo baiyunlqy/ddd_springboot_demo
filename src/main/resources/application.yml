@@ -73,3 +73,5 @@ mybatis-plus:
       update-strategy: not_empty
       select-strategy: not_empty
       capital-mode: false
+logging:
+  config: classpath:log4j2.yml
